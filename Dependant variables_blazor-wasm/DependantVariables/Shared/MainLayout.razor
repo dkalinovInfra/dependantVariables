@@ -1,0 +1,43 @@
+@inherits LayoutComponentBase
+@using NorthWindv2API
+@using Models.NorthWindv2API
+@inject NavigationManager NavigationManager
+@inject INorthWindv2APIService NorthWindv2APIService
+
+<div class="row-layout master-view-container">
+    <div class="column-layout group">
+        <div class="column-layout group_1">
+            <IgbCombo Data="@_northWindv2APICustomerDto" Label="Label/Placeholder" DisplayKey="CustomerId" Outlined="false" SingleSelect="true" Change="SingleSelectComboChange" class="single-select-combo" master_view-scope></IgbCombo>
+            <IgbButton Size="SizableComponentSize.Large" @onclick="@(e => Navigate(""))" class="button" master_view-scope>
+                Button
+                <IgbRipple></IgbRipple>
+            </IgbButton>
+        </div>
+        <div class="row-layout group">
+            <div class="view-container">
+                @Body
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<CustomerDto> _northWindv2APICustomerDto = new();
+
+    public void SingleSelectComboChange(IgbComboChangeEventArgs e)
+    {
+        NorthWindv2APIService.SelectedCustomer.OnNext((CustomerDto)e.Detail.NewValue.FirstOrDefault());
+    }
+
+    public void Navigate(string path)
+    {
+        NavigationManager.NavigateTo(path);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _northWindv2APICustomerDto = await NorthWindv2APIService.GetCustomerDtoList();
+
+        await base.OnInitializedAsync();
+    }
+}

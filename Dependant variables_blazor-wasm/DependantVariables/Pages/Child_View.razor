@@ -1,0 +1,119 @@
+@page "/"
+@using NorthWindv2API
+@using Models.NorthWindv2API
+@using System.Reactive.Linq
+@using System.Reactive.Subjects
+@inject INorthWindv2APIService NorthWindv2APIService
+@implements IDisposable;
+
+<div class="row-layout child-view-container">
+    <div class="column-layout group">
+        <div class="row-layout group">
+            <IgbGrid Data="@_northWindv2APIOrderDto" PrimaryKey="OrderId" DisplayDensity="DisplayDensity.Cosy" RowSelection="GridSelectionMode.Single" AllowFiltering="true" FilterMode="FilterMode.ExcelStyleFilter" AutoGenerate="false" RowSelectionChanging="GridRowSelectionChanging" class="ig-typography grid" child_view-scope>
+                <IgbColumn Field="EmployeeID" DataType="GridColumnDataType.Number" Header="employeeID" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="LastName" DataType="GridColumnDataType.String" Header="lastName" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="CustomerId" DataType="GridColumnDataType.String" Header="customerId" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="FirstName" DataType="GridColumnDataType.String" Header="firstName" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="EmployeeId" DataType="GridColumnDataType.Number" Header="employeeId" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Title" DataType="GridColumnDataType.String" Header="title" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipperId" DataType="GridColumnDataType.Number" Header="shipperId" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="TitleOfCourtesy" DataType="GridColumnDataType.String" Header="titleOfCourtesy" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="OrderDate" DataType="GridColumnDataType.String" Header="orderDate" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="BirthDate" DataType="GridColumnDataType.Date" Header="birthDate" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="RequiredDate" DataType="GridColumnDataType.String" Header="requiredDate" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="HireDate" DataType="GridColumnDataType.Date" Header="hireDate" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipVia" DataType="GridColumnDataType.Number" Header="shipVia" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Address.Street" DataType="GridColumnDataType.String" Header="address street" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Freight" DataType="GridColumnDataType.Number" Header="freight" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Address.City" DataType="GridColumnDataType.String" Header="address city" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipName" DataType="GridColumnDataType.String" Header="shipName" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Address.Region" DataType="GridColumnDataType.String" Header="address region" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipAddress.Street" DataType="GridColumnDataType.String" Header="shipAddress street" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Address.PostalCode" DataType="GridColumnDataType.String" Header="address postalCode" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipAddress.City" DataType="GridColumnDataType.String" Header="shipAddress city" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Address.Country" DataType="GridColumnDataType.String" Header="address country" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipAddress.Region" DataType="GridColumnDataType.String" Header="shipAddress region" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Address.Phone" DataType="GridColumnDataType.String" Header="address phone" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipAddress.PostalCode" DataType="GridColumnDataType.String" Header="shipAddress postalCode" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ManagerID" DataType="GridColumnDataType.Number" Header="managerID" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipAddress.Country" DataType="GridColumnDataType.String" Header="shipAddress country" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="Notes" DataType="GridColumnDataType.String" Header="notes" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="ShipAddress.Phone" DataType="GridColumnDataType.String" Header="shipAddress phone" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="AvatarUrl" DataType="GridColumnDataType.String" Header="avatarUrl" Sortable="true" Selectable="false"></IgbColumn>
+                <IgbColumn Field="OrderId" DataType="GridColumnDataType.Number" Header="orderId" Sortable="true" Selectable="false"></IgbColumn>
+            </IgbGrid>
+        </div>
+        <div class="row-layout group">
+            @foreach (var item in this._orderDetails)
+            {
+                <IgbCard Outlined="true" class="card" child_view-scope>
+                    <IgbCardHeader>
+                        <h3 slot="title">
+                            @item.ProductId
+                        </h3>
+                        <h5 slot="subtitle">
+                            @item.UnitPrice
+                        </h5>
+                    </IgbCardHeader>
+                    <IgbCardActions class="actions-content" child_view-scope>
+                        <IgbButton Variant="ButtonVariant.Flat" slot="start" Size="SizableComponentSize.Large" class="button" child_view-scope>
+                            Button
+                            <IgbRipple></IgbRipple>
+                        </IgbButton>
+                        <IgbIconButton slot="end" Variant="IconButtonVariant.Flat">
+                            <span class="material-icons">
+                                favorite
+                            </span>
+                            <IgbRipple></IgbRipple>
+                        </IgbIconButton>
+                        <IgbIconButton slot="end" Variant="IconButtonVariant.Flat">
+                            <span class="material-icons">
+                                bookmark
+                            </span>
+                            <IgbRipple></IgbRipple>
+                        </IgbIconButton>
+                        <IgbIconButton slot="end" Variant="IconButtonVariant.Flat">
+                            <span class="material-icons">
+                                share
+                            </span>
+                            <IgbRipple></IgbRipple>
+                        </IgbIconButton>
+                    </IgbCardActions>
+                </IgbCard>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<OrderDetailDto> _orderDetails = new();
+    private List<OrderDto> _northWindv2APIOrderDto = new();
+    private Subject<object> destroy = new();
+
+    public void GridRowSelectionChanging(IgbRowSelectionEventArgs e)
+    {
+        NorthWindv2APIService.SelectedOrder.OnNext((OrderDto)e.Detail.NewSelection.FirstOrDefault());
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        NorthWindv2APIService.SelectedOrder.TakeUntil(this.destroy).Subscribe(async s =>         
+        {
+            _orderDetails = await NorthWindv2APIService.GetOrderDetailDtoList($"{NorthWindv2APIService.SelectedOrder.Value?.OrderId}");
+            await InvokeAsync(StateHasChanged);
+        });
+        NorthWindv2APIService.SelectedCustomer.TakeUntil(this.destroy).Subscribe(async s =>         
+        {
+            _northWindv2APIOrderDto = await NorthWindv2APIService.GetOrderDtoList($"{NorthWindv2APIService.SelectedCustomer.Value?.CustomerId}");
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await base.OnInitializedAsync();
+    }
+
+    public void Dispose()
+    {
+        this.destroy.OnNext(null);
+        this.destroy.Dispose();
+    }
+}

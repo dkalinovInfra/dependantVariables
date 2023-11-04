@@ -22,6 +22,14 @@
 .row-layout {
   display: flex;
 }
+.group_1 {
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  position: relative;
+  min-width: 50px;
+  min-height: 50px;
+}
 .card {
   width: 320px;
   height: max-content;
@@ -40,4 +48,8 @@
 }
 .button {
   height: max-content;
+}
+.text {
+  height: max-content;
+  min-width: min-content;
 }

@@ -13,6 +13,8 @@ import { NorthWindv2APIService } from '../services/north-windv2-api.service';
 export class ChildViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   public orderDetails: OrderDetailDto[] = [];
+  public quantity?: number;
+  public discount?: number;
   public northWindv2APIOrderDto: OrderDto[] = [];
 
   constructor(
@@ -22,12 +24,19 @@ export class ChildViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.northWindv2APIService.selectedOrder.pipe(takeUntil(this.destroy$)).subscribe(
       () => this.northWindv2APIService.getOrderDetailDtoList(this.northWindv2APIService.selectedOrder.value?.orderId as any).pipe(take(1)).subscribe({
-        next: (data) => this.orderDetails = data,
+        // quantity and discount depends on orderDetails
+        next: (data) => {this.orderDetails = data; 
+                         this.quantity = undefined; 
+                         this.discount = undefined;},
         error: (_err: any) => this.orderDetails = []
     }));
     this.northWindv2APIService.selectedCustomer.pipe(takeUntil(this.destroy$)).subscribe(
       () => this.northWindv2APIService.getOrderDtoList(this.northWindv2APIService.selectedCustomer.value?.customerId as any).pipe(take(1)).subscribe({
-        next: (data) => this.northWindv2APIOrderDto = data,
+        // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
+        next: (data) => {this.northWindv2APIOrderDto = data;
+                         this.orderDetails = [];
+                         this.quantity = undefined; 
+                         this.discount = undefined;}, 
         error: (_err: any) => this.northWindv2APIOrderDto = []
     }));
   }
@@ -38,6 +47,14 @@ export class ChildViewComponent implements OnInit, OnDestroy {
   }
 
   public gridRowSelectionChanging(event: IRowSelectionEventArgs) {
-    this.northWindv2APIService.selectedOrder.next(event.newSelection[0] as OrderDto);
+    this.northWindv2APIService.selectedOrder.next(event.newSelection[0] as OrderDto);    
+  }
+
+  public buttonClick(item: OrderDetailDto) {
+    this.quantity = item.quantity as number;
+  }
+
+  public buttonClick1(item: OrderDetailDto) {
+    this.discount = item.discount as number;
   }
 }

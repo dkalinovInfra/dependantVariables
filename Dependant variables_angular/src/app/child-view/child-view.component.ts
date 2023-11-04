@@ -11,11 +11,35 @@ import { NorthWindv2APIService } from '../services/north-windv2-api.service';
   styleUrls: ['./child-view.component.scss']
 })
 export class ChildViewComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
-  public orderDetails: OrderDetailDto[] = [];
+  private destroy$: Subject<void> = new Subject<void>();  
   public quantity?: number;
-  public discount?: number;
-  public northWindv2APIOrderDto: OrderDto[] = [];
+  public discount?: number;  
+
+  private _orderDetails: OrderDetailDto[] = []; 
+
+  get orderDetails(): OrderDetailDto[]  {
+      return this._orderDetails;
+  }
+
+  set orderDetails(value: OrderDetailDto[] ) {
+      this._orderDetails = value;
+      // quantity and discount depends on orderDetails
+      this.quantity = undefined; 
+      this.discount = undefined;
+      
+  }
+
+  private _northWindv2APIOrderDto: OrderDto[] = []; 
+
+  get northWindv2APIOrderDto(): OrderDto[]  { 
+      return this._northWindv2APIOrderDto;
+  }
+
+  set northWindv2APIOrderDto(value: OrderDto[] ) {
+      // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
+      this._northWindv2APIOrderDto = value;
+      this.orderDetails = [];
+  }
 
   constructor(
     protected northWindv2APIService: NorthWindv2APIService,
@@ -23,20 +47,13 @@ export class ChildViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.northWindv2APIService.selectedOrder.pipe(takeUntil(this.destroy$)).subscribe(
-      () => this.northWindv2APIService.getOrderDetailDtoList(this.northWindv2APIService.selectedOrder.value?.orderId as any).pipe(take(1)).subscribe({
-        // quantity and discount depends on orderDetails
-        next: (data) => {this.orderDetails = data; 
-                         this.quantity = undefined; 
-                         this.discount = undefined;},
+      () => this.northWindv2APIService.getOrderDetailDtoList(this.northWindv2APIService.selectedOrder.value?.orderId as any).pipe(take(1)).subscribe({        
+        next: (data) => {this.orderDetails = data;},
         error: (_err: any) => this.orderDetails = []
     }));
     this.northWindv2APIService.selectedCustomer.pipe(takeUntil(this.destroy$)).subscribe(
-      () => this.northWindv2APIService.getOrderDtoList(this.northWindv2APIService.selectedCustomer.value?.customerId as any).pipe(take(1)).subscribe({
-        // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
-        next: (data) => {this.northWindv2APIOrderDto = data;
-                         this.orderDetails = [];
-                         this.quantity = undefined; 
-                         this.discount = undefined;}, 
+      () => this.northWindv2APIService.getOrderDtoList(this.northWindv2APIService.selectedCustomer.value?.customerId as any).pipe(take(1)).subscribe({        
+        next: (data) => {this.northWindv2APIOrderDto = data;}, 
         error: (_err: any) => this.northWindv2APIOrderDto = []
     }));
   }

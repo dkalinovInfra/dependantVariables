@@ -87,16 +87,38 @@ export default class ChildView extends LitElement {
   }
 
   @state()
-  private orderDetails: OrderDetailDto[] = [];
+  private _orderDetails: OrderDetailDto[] = []; 
+
+  get orderDetails(): OrderDetailDto[]  {
+      return this._orderDetails;
+  }
+
+  set orderDetails(value: OrderDetailDto[] ) {
+      this._orderDetails = value;
+      // quantity and discount depends on orderDetails
+      this.quantity = undefined; 
+      this.discount = undefined;
+      
+  }
+
+  @state()
+  private _northWindv2APIOrderDto: OrderDto[] = []; 
+
+  get northWindv2APIOrderDto(): OrderDto[]  { 
+      return this._northWindv2APIOrderDto;
+  }
+
+  set northWindv2APIOrderDto(value: OrderDto[] ) {
+      // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
+      this._northWindv2APIOrderDto = value;
+      this.orderDetails = [];
+  }
 
   @state()
   private quantity?: number;
 
   @state()
   private discount?: number;
-
-  @state()
-  private northWindv2APIOrderDto: OrderDto[] = [];
 
   @state()
   private destroy$: Subject<void> = new Subject<void>();

@@ -9,7 +9,7 @@
 <div class="row-layout child-view-container">
     <div class="column-layout group">
         <div class="row-layout group">
-            <IgbGrid Data="@_northWindv2APIOrderDto" PrimaryKey="OrderId" DisplayDensity="DisplayDensity.Cosy" RowSelection="GridSelectionMode.Single" AllowFiltering="true" FilterMode="FilterMode.ExcelStyleFilter" AutoGenerate="false" RowSelectionChanging="GridRowSelectionChanging" class="ig-typography grid" child_view-scope>
+            <IgbGrid Data="@NorthWindv2ApiOrderDto" PrimaryKey="OrderId" DisplayDensity="DisplayDensity.Cosy" RowSelection="GridSelectionMode.Single" AllowFiltering="true" FilterMode="FilterMode.ExcelStyleFilter" AutoGenerate="false" RowSelectionChanging="GridRowSelectionChanging" class="ig-typography grid" child_view-scope>
                 <IgbColumn Field="OrderId" DataType="GridColumnDataType.Number" Header="orderId" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="CustomerId" DataType="GridColumnDataType.String" Header="customerId" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="CustomerId" DataType="GridColumnDataType.String" Header="customerId" Sortable="true" Selectable="false"></IgbColumn>
@@ -44,7 +44,7 @@
         </div>
         <div class="column-layout group">
             <div class="row-layout group_1">
-                @foreach (var item in this._orderDetails)
+                @foreach (var item in this.OrderDetails)
                 {
                     <IgbCard Outlined="true" class="card" child_view-scope>
                         <IgbCardHeader>
@@ -99,13 +99,38 @@
 </div>
 
 @code {
-    private List<OrderDetailDto> _orderDetails = new();
     // Those variables should be nullable, private and be fields instead of properties 
     private double? _quantity;
     private double? _discount;
-
-    private List<OrderDto> _northWindv2APIOrderDto = new();
+    
     private Subject<object> destroy = new();
+    
+    private List<OrderDto> _northWindv2APIOrderDto = new();
+
+    private List<OrderDto> NorthWindv2ApiOrderDto
+    {
+        get => _northWindv2APIOrderDto;
+        set
+        {
+            _northWindv2APIOrderDto = value;
+            // orderDetails depends on selectedCustomer
+            OrderDetails = new();
+        }
+    }
+
+    private List<OrderDetailDto> _orderDetails = new();
+
+    private List<OrderDetailDto> OrderDetails
+    {
+        get => _orderDetails;
+        set
+        {
+            _orderDetails = value;
+            // quantity and discount depends on orderDetails
+            _quantity = null;
+            _discount = null;
+        }
+    }
 
     public void GridRowSelectionChanging(IgbRowSelectionEventArgs e)
     {
@@ -128,19 +153,12 @@
     {
         NorthWindv2APIService.SelectedOrder.TakeUntil(this.destroy).Subscribe(async s =>
         {
-            // quantity and discount depends on orderDetails
-            _orderDetails = await NorthWindv2APIService.GetOrderDetailDtoList($"{NorthWindv2APIService.SelectedOrder.Value?.OrderId}");
-            _quantity = null;
-            _discount = null;
+            OrderDetails = await NorthWindv2APIService.GetOrderDetailDtoList($"{NorthWindv2APIService.SelectedOrder.Value?.OrderId}");
             await InvokeAsync(StateHasChanged);
         });
         NorthWindv2APIService.SelectedCustomer.TakeUntil(this.destroy).Subscribe(async s =>
         {
-            // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
-            _northWindv2APIOrderDto = await NorthWindv2APIService.GetOrderDtoList($"{NorthWindv2APIService.SelectedCustomer.Value?.CustomerId}");
-            _orderDetails = new();
-            _quantity = null;
-            _discount = null;
+            NorthWindv2ApiOrderDto = await NorthWindv2APIService.GetOrderDtoList($"{NorthWindv2APIService.SelectedCustomer.Value?.CustomerId}");
             await InvokeAsync(StateHasChanged);
         });
 

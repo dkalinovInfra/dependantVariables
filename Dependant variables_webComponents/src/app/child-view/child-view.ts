@@ -80,9 +80,7 @@ export default class ChildView extends LitElement {
     northWindv2APIService.selectedCustomer.pipe(takeUntil(this.destroy$)).subscribe(() => northWindv2APIService.getOrderDtoList(northWindv2APIService.selectedCustomer.value?.customerId as any).then(
         // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
         (data) => {this.northWindv2APIOrderDto = data;
-                    this.orderDetails = [];
-                    this.quantity = undefined; 
-                    this.discount = undefined;}, 
+                    this.orderDetails = [];}, 
         (err) => this.northWindv2APIOrderDto = []));
   }
 
@@ -97,22 +95,11 @@ export default class ChildView extends LitElement {
       this._orderDetails = value;
       // quantity and discount depends on orderDetails
       this.quantity = undefined; 
-      this.discount = undefined;
-      
+      this.discount = undefined;      
   }
 
   @state()
-  private _northWindv2APIOrderDto: OrderDto[] = []; 
-
-  get northWindv2APIOrderDto(): OrderDto[]  { 
-      return this._northWindv2APIOrderDto;
-  }
-
-  set northWindv2APIOrderDto(value: OrderDto[] ) {
-      // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
-      this._northWindv2APIOrderDto = value;
-      this.orderDetails = [];
-  }
+  private northWindv2APIOrderDto: OrderDto[] = [];
 
   @state()
   private quantity?: number;
@@ -135,6 +122,20 @@ export default class ChildView extends LitElement {
     this.discount = item.discount as number;
   }
 
+  public buttonClick1(item: any) {
+    console.log(item);
+    this.quantity = undefined;
+    this.discount = undefined;
+  }  
+
+  // TODO this in front of ctx is a bug
+  public columnBodyTemplate = (ctx: any) => html`
+    <igc-button size="large" @click="${this.buttonClick1}" class="button_1">
+      ${ctx.cell.value}
+      <igc-ripple></igc-ripple>
+    </igc-button>
+  `
+
   disconnectedCallback() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -148,37 +149,23 @@ export default class ChildView extends LitElement {
       <link rel='stylesheet' href='node_modules/@infragistics/igniteui-webcomponents-grids/grids/themes/dark/bootstrap.css'>
       <div class="column-layout group">
         <div class="row-layout group">
-          <igc-grid .data="${this.northWindv2APIOrderDto}" primary-key="orderId" display-density="cosy" row-selection="single" allow-filtering="true" filter-mode="excelStyleFilter" auto-generate="false" @rowSelectionChanging="${this.gridRowSelectionChanging}" class="ig-typography ig-scrollbar grid">
-            <igc-column field="orderId" data-type="number" header="orderId" sortable="true" selectable="false"></igc-column>
-            <igc-column field="customerId" data-type="string" header="customerId" sortable="true" selectable="false"></igc-column>
-            <igc-column field="customerId" data-type="string" header="customerId" sortable="true" selectable="false"></igc-column>
+          <igc-grid .data="${this.northWindv2APIOrderDto}" primary-key="orderId" display-density="cosy" row-selection="single" allow-filtering="true" filter-mode="excelStyleFilter" auto-generate="false" 
+          @rowSelectionChanging="${this.gridRowSelectionChanging}" class="ig-typography ig-scrollbar grid">
+            <igc-column field="orderId" data-type="number" header="orderId" sortable="true" selectable="false" @bodyTemplate="${this.columnBodyTemplate}"></igc-column>
+            <igc-column field="customerId" data-type="string" header="customerId" sortable="true" selectable="false"></igc-column>            
             <igc-column field="employeeId" data-type="number" header="employeeId" sortable="true" selectable="false"></igc-column>
-            <igc-column field="employeeId" data-type="number" header="employeeId" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipperId" data-type="number" header="shipperId" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipperId" data-type="number" header="shipperId" sortable="true" selectable="false"></igc-column>
-            <igc-column field="orderDate" data-type="string" header="orderDate" sortable="true" selectable="false"></igc-column>
+            <igc-column field="shipperId" data-type="number" header="shipperId" sortable="true" selectable="false"></igc-column>            
             <igc-column field="orderDate" data-type="string" header="orderDate" sortable="true" selectable="false"></igc-column>
             <igc-column field="requiredDate" data-type="string" header="requiredDate" sortable="true" selectable="false"></igc-column>
-            <igc-column field="requiredDate" data-type="string" header="requiredDate" sortable="true" selectable="false"></igc-column>
             <igc-column field="shipVia" data-type="number" header="shipVia" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipVia" data-type="number" header="shipVia" sortable="true" selectable="false"></igc-column>
-            <igc-column field="freight" data-type="number" header="freight" sortable="true" selectable="false"></igc-column>
-            <igc-column field="freight" data-type="number" header="freight" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipName" data-type="string" header="shipName" sortable="true" selectable="false"></igc-column>
+            <igc-column field="freight" data-type="number" header="freight" sortable="true" selectable="false"></igc-column>            
             <igc-column field="shipName" data-type="string" header="shipName" sortable="true" selectable="false"></igc-column>
             <igc-column field="shipAddress.street" data-type="string" header="shipAddress street" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.street" data-type="string" header="shipAddress street" sortable="true" selectable="false"></igc-column>
             <igc-column field="shipAddress.city" data-type="string" header="shipAddress city" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.city" data-type="string" header="shipAddress city" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.region" data-type="string" header="shipAddress region" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.region" data-type="string" header="shipAddress region" sortable="true" selectable="false"></igc-column>
+            <igc-column field="shipAddress.region" data-type="string" header="shipAddress region" sortable="true" selectable="false"></igc-column>            
             <igc-column field="shipAddress.postalCode" data-type="string" header="shipAddress postalCode" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.postalCode" data-type="string" header="shipAddress postalCode" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.country" data-type="string" header="shipAddress country" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.country" data-type="string" header="shipAddress country" sortable="true" selectable="false"></igc-column>
+            <igc-column field="shipAddress.country" data-type="string" header="shipAddress country" sortable="true" selectable="false"></igc-column>            
             <igc-column field="shipAddress.phone" data-type="string" header="shipAddress phone" sortable="true" selectable="false"></igc-column>
-            <igc-column field="shipAddress.phone" data-type="string" header="shipAddress phone" sortable="true" selectable="false"></igc-column>
-            <igc-column field="orderId" data-type="number" header="orderId" sortable="true" selectable="false"></igc-column>
           </igc-grid>
         </div>
         <div class="column-layout group">

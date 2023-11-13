@@ -3,43 +3,33 @@
 @using Models.NorthWindv2API
 @using System.Reactive.Subjects
 @using System.Reactive.Linq
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
 @inject INorthWindv2APIService NorthWindv2APIService
 @implements IDisposable;
 
 <div class="row-layout child-view-container">
     <div class="column-layout group">
         <div class="row-layout group">
-            <IgbGrid Data="@NorthWindv2ApiOrderDto" PrimaryKey="OrderId" DisplayDensity="DisplayDensity.Cosy" RowSelection="GridSelectionMode.Single" AllowFiltering="true" FilterMode="FilterMode.ExcelStyleFilter" AutoGenerate="false" RowSelectionChanging="GridRowSelectionChanging" class="ig-typography grid" child_view-scope>
-                <IgbColumn Field="OrderId" DataType="GridColumnDataType.Number" Header="orderId" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="CustomerId" DataType="GridColumnDataType.String" Header="customerId" Sortable="true" Selectable="false"></IgbColumn>
+            
+            <IgbGrid Data="@_northWindv2APIOrderDto" PrimaryKey="OrderId" DisplayDensity="DisplayDensity.Cosy" RowSelection="GridSelectionMode.Single" RowSelectionChanging="GridRowSelectionChanging" 
+                     AllowFiltering="true" FilterMode="FilterMode.ExcelStyleFilter" AutoGenerate="false"
+                     class="ig-typography grid" child_view-scope>
+                <IgbColumn Field="OrderId" DataType="GridColumnDataType.Number" BodyTemplateScript="columnBodyTemplateScript" Header="orderId" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="CustomerId" DataType="GridColumnDataType.String" Header="customerId" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="EmployeeId" DataType="GridColumnDataType.Number" Header="employeeId" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="EmployeeId" DataType="GridColumnDataType.Number" Header="employeeId" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipperId" DataType="GridColumnDataType.Number" Header="shipperId" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipperId" DataType="GridColumnDataType.Number" Header="shipperId" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="OrderDate" DataType="GridColumnDataType.String" Header="orderDate" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="OrderDate" DataType="GridColumnDataType.String" Header="orderDate" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="RequiredDate" DataType="GridColumnDataType.String" Header="requiredDate" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="RequiredDate" DataType="GridColumnDataType.String" Header="requiredDate" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipVia" DataType="GridColumnDataType.Number" Header="shipVia" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipVia" DataType="GridColumnDataType.Number" Header="shipVia" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="Freight" DataType="GridColumnDataType.Number" Header="freight" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="Freight" DataType="GridColumnDataType.Number" Header="freight" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipName" DataType="GridColumnDataType.String" Header="shipName" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipName" DataType="GridColumnDataType.String" Header="shipName" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipAddress.Street" DataType="GridColumnDataType.String" Header="shipAddress street" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipAddress.Street" DataType="GridColumnDataType.String" Header="shipAddress street" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipAddress.City" DataType="GridColumnDataType.String" Header="shipAddress city" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipAddress.City" DataType="GridColumnDataType.String" Header="shipAddress city" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipAddress.Region" DataType="GridColumnDataType.String" Header="shipAddress region" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipAddress.Region" DataType="GridColumnDataType.String" Header="shipAddress region" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipAddress.PostalCode" DataType="GridColumnDataType.String" Header="shipAddress postalCode" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipAddress.PostalCode" DataType="GridColumnDataType.String" Header="shipAddress postalCode" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipAddress.Country" DataType="GridColumnDataType.String" Header="shipAddress country" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipAddress.Country" DataType="GridColumnDataType.String" Header="shipAddress country" Sortable="true" Selectable="false"></IgbColumn>
                 <IgbColumn Field="ShipAddress.Phone" DataType="GridColumnDataType.String" Header="shipAddress phone" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="ShipAddress.Phone" DataType="GridColumnDataType.String" Header="shipAddress phone" Sortable="true" Selectable="false"></IgbColumn>
-                <IgbColumn Field="OrderId" DataType="GridColumnDataType.Number" Header="orderId" Sortable="true" Selectable="false"></IgbColumn>
             </IgbGrid>
         </div>
         <div class="column-layout group">
@@ -99,24 +89,16 @@
 </div>
 
 @code {
+    private IJSObjectReference module;
+    private DotNetObjectReference<Child_View> objRef;
+
+    private List<OrderDto> _northWindv2APIOrderDto = new();
+
     // Those variables should be nullable, private and be fields instead of properties 
     private double? _quantity;
     private double? _discount;
     
     private Subject<object> destroy = new();
-    
-    private List<OrderDto> _northWindv2APIOrderDto = new();
-
-    private List<OrderDto> NorthWindv2ApiOrderDto
-    {
-        get => _northWindv2APIOrderDto;
-        set
-        {
-            _northWindv2APIOrderDto = value;
-            // orderDetails depends on selectedCustomer
-            OrderDetails = new();
-        }
-    }
 
     private List<OrderDetailDto> _orderDetails = new();
 
@@ -127,6 +109,20 @@
         {
             _orderDetails = value;
             // quantity and discount depends on orderDetails
+            _quantity = null;
+            _discount = null;
+        }
+    }
+
+    private int _orderId;
+
+    private int OrderId
+    {
+        get => _orderId;
+        set
+        {
+            _orderId = value;
+            // quantity and discount depends on OrderId
             _quantity = null;
             _discount = null;
         }
@@ -158,11 +154,29 @@
         });
         NorthWindv2APIService.SelectedCustomer.TakeUntil(this.destroy).Subscribe(async s =>
         {
-            NorthWindv2ApiOrderDto = await NorthWindv2APIService.GetOrderDtoList($"{NorthWindv2APIService.SelectedCustomer.Value?.CustomerId}");
+            _northWindv2APIOrderDto = await NorthWindv2APIService.GetOrderDtoList($"{NorthWindv2APIService.SelectedCustomer.Value?.CustomerId}");
+            OrderDetails = new();
             await InvokeAsync(StateHasChanged);
         });
+        
+        module = await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Child_View.razor.js");
+        objRef = DotNetObjectReference.Create(this);
+        await JS.InvokeAsync<string>("setDotNetRef", objRef);
 
         await base.OnInitializedAsync();
+    }
+    
+    [JSInvokable]
+    public void Navigate(string path)
+    {
+        NavigationManager.NavigateTo(path);
+    }
+    
+    [JSInvokable]
+    public void SetOrderId(int value)
+    {
+        OrderId = value;
+        StateHasChanged();
     }
 
     public void Dispose()

@@ -26,20 +26,22 @@ export class ChildViewComponent implements OnInit, OnDestroy {
       // quantity and discount depends on orderDetails
       this.quantity = undefined; 
       this.discount = undefined;
-      
   }
 
-  private _northWindv2APIOrderDto: OrderDto[] = []; 
+  private _orderId?: number; 
 
-  get northWindv2APIOrderDto(): OrderDto[]  { 
-      return this._northWindv2APIOrderDto;
+  get orderId(): number | undefined  {
+      return this._orderId;
   }
 
-  set northWindv2APIOrderDto(value: OrderDto[] ) {
-      // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
-      this._northWindv2APIOrderDto = value;
-      this.orderDetails = [];
+  set orderId(value: number | undefined) {
+      this._orderId = value;
+      // quantity and discount depends on orderId
+      this.quantity = undefined; 
+      this.discount = undefined;      
   }
+
+  public northWindv2APIOrderDto: OrderDto[] = [];
 
   constructor(
     protected northWindv2APIService: NorthWindv2APIService,
@@ -53,7 +55,11 @@ export class ChildViewComponent implements OnInit, OnDestroy {
     }));
     this.northWindv2APIService.selectedCustomer.pipe(takeUntil(this.destroy$)).subscribe(
       () => this.northWindv2APIService.getOrderDtoList(this.northWindv2APIService.selectedCustomer.value?.customerId as any).pipe(take(1)).subscribe({        
-        next: (data) => {this.northWindv2APIOrderDto = data;}, 
+        next: (data) => {
+          // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
+          this.northWindv2APIOrderDto = data;
+          this.orderDetails = [];
+        }, 
         error: (_err: any) => this.northWindv2APIOrderDto = []
     }));
   }
@@ -74,4 +80,8 @@ export class ChildViewComponent implements OnInit, OnDestroy {
   public buttonClick1(item: OrderDetailDto) {
     this.discount = item.discount as number;
   }
+
+  public buttonClick3(item: number) {
+		this.orderId = item;
+	}
 }

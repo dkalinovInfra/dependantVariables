@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChildViewComponent } from './child-view/child-view.component';
-import { IgxGridModule, IgxCardModule, IgxButtonModule, IgxRippleModule, IgxIconModule, IgxSimpleComboModule, IgxInputGroupModule } from '@infragistics/igniteui-angular';
+import { IgxGridModule, IgxButtonModule, IgxRippleModule, IgxCardModule, IgxIconModule, IgxSliderModule, IgxInputGroupModule, IgxCheckboxModule, IgxDatePickerModule, IgxSimpleComboModule } from '@infragistics/igniteui-angular';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -23,6 +23,10 @@ import { HttpClientModule } from '@angular/common/http';
     IgxButtonModule,
     IgxRippleModule,
     IgxIconModule,
+    IgxSliderModule,
+    IgxInputGroupModule,
+    IgxCheckboxModule,
+    IgxDatePickerModule,
     FormsModule,
     IgxSimpleComboModule,
     IgxInputGroupModule,

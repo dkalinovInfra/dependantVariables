@@ -84,6 +84,20 @@
                     @_discount
                 </p>
             </div>
+            <div class="row-layout group">
+				<IgbSlider Value="@(_quantity ?? default)" Min="0" Max="100" Step="1" DiscreteTrack="true" class="slider tmp" style="width:500px"></IgbSlider>
+			</div>
+            <div class="row-layout group_1">
+				<IgbDatePicker Label="Date" Value="@(_orderDate.GetValueOrDefault())" class="date-picker" child_view-scope></IgbDatePicker>
+			</div>
+			<div class="row-layout group_1">
+				<IgbInput Value="@NorthWindv2APIService.SelectedOrder.Value?.ShipName" Outlined="true" class="input" child_view-scope></IgbInput>
+			</div>
+			<div class="row-layout group_1">
+				<IgbCheckbox LabelPosition="CheckboxBaseLabelPosition.After" Checked="@_testVar" class="checkbox" child_view-scope>
+					Label
+				</IgbCheckbox>
+			</div>
         </div>
     </div>
 </div>
@@ -97,6 +111,9 @@
     // Those variables should be nullable, private and be fields instead of properties 
     private double? _quantity;
     private double? _discount;
+    private DateTime? _orderDate = DateTime.Parse("2023-11-14T15:25");
+    // For bools it is OK to use non-nullable types, as default value by specification is false
+    private bool _testVar = true;
     
     private Subject<object> destroy = new();
 
@@ -108,9 +125,11 @@
         set
         {
             _orderDetails = value;
-            // quantity and discount depends on orderDetails
+            // quantity, discount, testVar and orderDate depends on orderDetails
             _quantity = null;
             _discount = null;
+            _testVar = false;
+            _orderDate = null;
         }
     }
 
@@ -122,9 +141,11 @@
         set
         {
             _orderId = value;
-            // quantity and discount depends on OrderId
+            // quantity, discount, testVar and orderDate depends on orderDetails
             _quantity = null;
             _discount = null;
+            _testVar = false;
+            _orderDate = null;
         }
     }
 
@@ -137,6 +158,7 @@
     private void ButtonClick(OrderDetailDto item)
     {
         _quantity = (double)item.Quantity;
+        StateHasChanged();
     }
 
     // This method should be private
@@ -155,6 +177,8 @@
         NorthWindv2APIService.SelectedCustomer.TakeUntil(this.destroy).Subscribe(async s =>
         {
             _northWindv2APIOrderDto = await NorthWindv2APIService.GetOrderDtoList($"{NorthWindv2APIService.SelectedCustomer.Value?.CustomerId}");
+            // Selected order depends on selected customer
+            NorthWindv2APIService.SelectedOrder.OnNext(default);
             OrderDetails = new();
             await InvokeAsync(StateHasChanged);
         });

@@ -1,13 +1,13 @@
 import { html, css, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { defineComponents, IgcButtonComponent, IgcCardComponent, IgcIconButtonComponent, IgcIconComponent, IgcRippleComponent } from 'igniteui-webcomponents';
+import { defineComponents, IgcButtonComponent, IgcCardComponent, IgcCheckboxComponent, IgcIconButtonComponent, IgcIconComponent, IgcInputComponent, IgcRippleComponent, IgcSliderComponent } from 'igniteui-webcomponents';
 import { Subject, takeUntil } from 'rxjs';
 import { OrderDetailDto } from '../models/north-windv-2api/order-detail-dto';
 import '@infragistics/igniteui-webcomponents-grids/grids/combined.js';
 import { OrderDto } from '../models/north-windv-2api/order-dto';
 import { northWindv2APIService } from '../services/NorthWindv2API-service';
 
-defineComponents(IgcCardComponent, IgcButtonComponent, IgcRippleComponent, IgcIconButtonComponent, IgcIconComponent);
+defineComponents(IgcCardComponent, IgcButtonComponent, IgcRippleComponent, IgcIconButtonComponent, IgcIconComponent, IgcSliderComponent, IgcInputComponent, IgcCheckboxComponent);
 
 @customElement('app-child-view')
 export default class ChildView extends LitElement {
@@ -72,14 +72,12 @@ export default class ChildView extends LitElement {
   constructor() {
     super();
     northWindv2APIService.selectedOrder.pipe(takeUntil(this.destroy$)).subscribe(() => northWindv2APIService.getOrderDetailDtoList(northWindv2APIService.selectedOrder.value?.orderId as any).then(
-        // quantity and discount depends on orderDetails
-        (data) => {this.orderDetails = data;
-                  this.quantity = undefined; 
-                  this.discount = undefined;}, 
+        (data) => {this.orderDetails = data}, 
         (err) => this.orderDetails = []));
     northWindv2APIService.selectedCustomer.pipe(takeUntil(this.destroy$)).subscribe(() => northWindv2APIService.getOrderDtoList(northWindv2APIService.selectedCustomer.value?.customerId as any).then(
         // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
-        (data) => {this.northWindv2APIOrderDto = data;
+        (data) => { this.northWindv2APIOrderDto = data;
+                    northWindv2APIService.selectedOrder.next(undefined);
                     this.orderDetails = [];}, 
         (err) => this.northWindv2APIOrderDto = []));
   }
@@ -93,9 +91,30 @@ export default class ChildView extends LitElement {
 
   set orderDetails(value: OrderDetailDto[] ) {
       this._orderDetails = value;
-      // quantity and discount depends on orderDetails
+      // quantity, discount, testVar and orderDate depends on orderDetails
       this.quantity = undefined; 
-      this.discount = undefined;      
+      this.discount = undefined;
+      this.orderDate = undefined;
+      this.testVar = false;
+      console.log('this.testVar: ' + this.testVar);
+  }
+
+  @state()
+  private _orderId?: number; 
+
+  get orderId(): number | undefined  {
+      return this._orderId;
+  }
+
+  set orderId(value: number | undefined) {
+      this._orderId = value;
+      // quantity, discount, testVar and orderDate depends on orderDetails
+      this.quantity = undefined; 
+      this.discount = undefined;
+      this.orderDate = undefined;
+      this.testVar = false;
+
+      console.log('this.testVar: ' + this.testVar);
   }
 
   @state()
@@ -106,6 +125,12 @@ export default class ChildView extends LitElement {
 
   @state()
   private discount?: number;
+
+  @state()
+	private orderDate?: Date = new Date('2023-11-14T15:25');
+
+	@state()
+	private testVar?: boolean = true;
 
   @state()
   private destroy$: Subject<void> = new Subject<void>();
@@ -124,13 +149,12 @@ export default class ChildView extends LitElement {
 
   public templateButtonClick(item: any) {
     console.log(item);
-    this.quantity = undefined;
-    this.discount = undefined;
+    this.orderId = item as number;
   }  
 
   // TODO this in front of ctx is a bug
   public columnBodyTemplate = (ctx: any) => html`
-    <igc-button size="large" @click="${this.templateButtonClick}" class="button_1">
+    <igc-button size="large" @click="${() => this.templateButtonClick(ctx.cell.value)}" class="button_1">
       ${ctx.cell.value}
       <igc-ripple></igc-ripple>
     </igc-button>
@@ -151,7 +175,7 @@ export default class ChildView extends LitElement {
         <div class="row-layout group">
           <igc-grid .data="${this.northWindv2APIOrderDto}" primary-key="orderId" display-density="cosy" row-selection="single" allow-filtering="true" filter-mode="excelStyleFilter" auto-generate="false" 
           @rowSelectionChanging="${this.gridRowSelectionChanging}" class="ig-typography ig-scrollbar grid">
-            <igc-column field="orderId" data-type="number" header="orderId" sortable="true" selectable="false" @bodyTemplate="${this.columnBodyTemplate}"></igc-column>
+            <igc-column field="orderId" data-type="number" header="orderId" sortable="true" selectable="false" .bodyTemplate="${this.columnBodyTemplate}"></igc-column>
             <igc-column field="customerId" data-type="string" header="customerId" sortable="true" selectable="false"></igc-column>            
             <igc-column field="employeeId" data-type="number" header="employeeId" sortable="true" selectable="false"></igc-column>
             <igc-column field="shipperId" data-type="number" header="shipperId" sortable="true" selectable="false"></igc-column>            
@@ -217,6 +241,20 @@ export default class ChildView extends LitElement {
               ${this.discount}
             </p>
           </div>
+          <div class="row-layout group_1">
+						<igc-slider value="${this.quantity!}" min="0" max="100" step="1" ?discrete-track="${true}" class="slider" style="width: 500px"></igc-slider>
+					</div>
+					<div class="row-layout group_1">
+						<igc-input value="${northWindv2APIService.selectedOrder.value?.shipName}" label="Label/Placeholder" ?outlined="${true}" class="input"></igc-input>
+					</div>
+					<div class="row-layout group_1">
+						<igc-checkbox labelPosition="after" .checked="${this.testVar}" class="checkbox">
+							Label
+						</igc-checkbox>
+					</div>
+					<div class="row-layout group_1">
+						<span class="date-picker">DatePicker not yet available in WebComponents</span>
+					</div>
         </div>
       </div>
     `;

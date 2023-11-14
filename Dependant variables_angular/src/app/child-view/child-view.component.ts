@@ -13,7 +13,9 @@ import { NorthWindv2APIService } from '../services/north-windv2-api.service';
 export class ChildViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();  
   public quantity?: number;
-  public discount?: number;  
+  public discount?: number;
+  public orderDate?: Date = new Date('2023-11-14T15:25');
+  public testVar: boolean = true;
 
   private _orderDetails: OrderDetailDto[] = []; 
 
@@ -23,9 +25,11 @@ export class ChildViewComponent implements OnInit, OnDestroy {
 
   set orderDetails(value: OrderDetailDto[] ) {
       this._orderDetails = value;
-      // quantity and discount depends on orderDetails
-      this.quantity = undefined; 
+      // quantity, discount, testVar and orderDate depends on orderDetails
+      this.quantity = undefined;
       this.discount = undefined;
+      this.orderDate = undefined;
+      this.testVar = false;
   }
 
   private _orderId?: number; 
@@ -36,9 +40,11 @@ export class ChildViewComponent implements OnInit, OnDestroy {
 
   set orderId(value: number | undefined) {
       this._orderId = value;
-      // quantity and discount depends on orderId
-      this.quantity = undefined; 
-      this.discount = undefined;      
+      // quantity, discount, testVar and orderDate depends on orderDetails
+      this.quantity = undefined;
+      this.discount = undefined;
+      this.orderDate = undefined;
+      this.testVar = false;   
   }
 
   public northWindv2APIOrderDto: OrderDto[] = [];
@@ -58,6 +64,7 @@ export class ChildViewComponent implements OnInit, OnDestroy {
         next: (data) => {
           // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
           this.northWindv2APIOrderDto = data;
+          this.northWindv2APIService.selectedOrder.next(undefined);
           this.orderDetails = [];
         }, 
         error: (_err: any) => this.northWindv2APIOrderDto = []
@@ -70,7 +77,7 @@ export class ChildViewComponent implements OnInit, OnDestroy {
   }
 
   public gridRowSelectionChanging(event: IRowSelectionEventArgs) {
-    this.northWindv2APIService.selectedOrder.next(event.newSelection[0] as OrderDto);    
+    this.northWindv2APIService.selectedOrder.next(event.newSelection[0] as OrderDto);
   }
 
   public buttonClick(item: OrderDetailDto) {

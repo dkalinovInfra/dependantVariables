@@ -23,7 +23,10 @@ void RegisterIgniteUI(IServiceCollection services)
         typeof(IgbRippleModule),
         typeof(IgbGridModule),
         typeof(IgbCardModule),
-        typeof(IgbIconButtonModule)
+        typeof(IgbIconButtonModule),
+        typeof(IgbSliderModule),
+        typeof(IgbInput),        
+        typeof(IgbCheckboxModule)
     );
 }
 

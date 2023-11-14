@@ -71,5 +71,24 @@
         {{ discount }}
       </p>
     </div>
+    <div class="row-layout group_1">
+			<igx-slider [value]="quantity!" [minValue]="0" [maxValue]="100" [step]="10" [secondaryTickLabels]="false" class="slider"></igx-slider>
+		</div>
+		<div class="row-layout group_1">
+			<igx-input-group type="border" class="input">
+				<input type="text" [value]="northWindv2APIService.selectedOrder.value?.shipName" igxInput />
+				<label igxLabel>Label/Placeholder</label>
+			</igx-input-group>
+		</div>
+		<div class="row-layout group_1">
+			<igx-checkbox labelPosition="after" [checked]="testVar" class="checkbox">
+				Label
+			</igx-checkbox>
+		</div>
+		<div class="row-layout group_1">
+			<igx-date-picker [value]="orderDate!" type="border" mode="dialog" class="date-picker">
+				<label igxLabel>Date</label>
+			</igx-date-picker>
+		</div>
   </div>
 </div>

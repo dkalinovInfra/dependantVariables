@@ -122,7 +122,7 @@ export default class ChildView extends LitElement {
     this.discount = item.discount as number;
   }
 
-  public buttonClick1(item: any) {
+  public templateButtonClick(item: any) {
     console.log(item);
     this.quantity = undefined;
     this.discount = undefined;
@@ -130,7 +130,7 @@ export default class ChildView extends LitElement {
 
   // TODO this in front of ctx is a bug
   public columnBodyTemplate = (ctx: any) => html`
-    <igc-button size="large" @click="${this.buttonClick1}" class="button_1">
+    <igc-button size="large" @click="${this.templateButtonClick}" class="button_1">
       ${ctx.cell.value}
       <igc-ripple></igc-ripple>
     </igc-button>

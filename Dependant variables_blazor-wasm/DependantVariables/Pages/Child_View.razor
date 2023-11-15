@@ -88,7 +88,7 @@
 				<IgbSlider Value="@(_quantity ?? default)" Min="0" Max="100" Step="1" DiscreteTrack="true" class="slider tmp" style="width:500px"></IgbSlider>
 			</div>
             <div class="row-layout group_1">
-				<IgbDatePicker Label="Date" Value="@(_orderDate.GetValueOrDefault())" class="date-picker" child_view-scope></IgbDatePicker>
+				<IgbDatePicker Label="Date" Value="@(_orderDate ?? default)" class="date-picker" child_view-scope></IgbDatePicker>
 			</div>
 			<div class="row-layout group_1">
 				<IgbInput Value="@NorthWindv2APIService.SelectedOrder.Value?.ShipName" Outlined="true" class="input" child_view-scope></IgbInput>
@@ -177,8 +177,7 @@
         NorthWindv2APIService.SelectedCustomer.TakeUntil(this.destroy).Subscribe(async s =>
         {
             _northWindv2APIOrderDto = await NorthWindv2APIService.GetOrderDtoList($"{NorthWindv2APIService.SelectedCustomer.Value?.CustomerId}");
-            // Selected order depends on selected customer
-            NorthWindv2APIService.SelectedOrder.OnNext(default);
+            // Selected order depends on selected customer            
             OrderDetails = new();
             await InvokeAsync(StateHasChanged);
         });

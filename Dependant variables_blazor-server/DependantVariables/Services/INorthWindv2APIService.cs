@@ -5,8 +5,8 @@ namespace DependantVariables.NorthWindv2API
 {
     public interface INorthWindv2APIService
     {
-        public BehaviorSubject<CustomerDto> SelectedCustomer { get; set; }
-        public BehaviorSubject<OrderDto> SelectedOrder { get; set; }
+        public BehaviorSubject<CustomerDto> SelectedCustomer { get; }
+        public BehaviorSubject<OrderDto> SelectedOrder { get; }
 
         Task<List<CustomerDto>> GetCustomerDtoList();
         Task<List<OrderDetailDto>> GetOrderDetailDtoList(string id);

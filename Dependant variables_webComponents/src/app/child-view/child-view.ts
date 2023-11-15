@@ -75,9 +75,8 @@ export default class ChildView extends LitElement {
         (data) => {this.orderDetails = data}, 
         (err) => this.orderDetails = []));
     northWindv2APIService.selectedCustomer.pipe(takeUntil(this.destroy$)).subscribe(() => northWindv2APIService.getOrderDtoList(northWindv2APIService.selectedCustomer.value?.customerId as any).then(
-        // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
+        // orderDetails depends on selectedCustomer
         (data) => { this.northWindv2APIOrderDto = data;
-                    northWindv2APIService.selectedOrder.next(undefined);
                     this.orderDetails = [];}, 
         (err) => this.northWindv2APIOrderDto = []));
   }
@@ -96,7 +95,6 @@ export default class ChildView extends LitElement {
       this.discount = undefined;
       this.orderDate = undefined;
       this.testVar = false;
-      console.log('this.testVar: ' + this.testVar);
   }
 
   @state()
@@ -242,13 +240,13 @@ export default class ChildView extends LitElement {
             </p>
           </div>
           <div class="row-layout group_1">
-						<igc-slider value="${this.quantity!}" min="0" max="100" step="1" ?discrete-track="${true}" class="slider" style="width: 500px"></igc-slider>
+						<igc-slider .value="${this.quantity!}" min="0" max="100" step="1" ?discrete-track="${true}" class="slider" style="width: 500px"></igc-slider>
 					</div>
 					<div class="row-layout group_1">
-						<igc-input value="${northWindv2APIService.selectedOrder.value?.shipName}" label="Label/Placeholder" ?outlined="${true}" class="input"></igc-input>
+						<igc-input .value="${northWindv2APIService.selectedOrder.value?.shipName}" label="Label/Placeholder" ?outlined="${true}" class="input"></igc-input>
 					</div>
 					<div class="row-layout group_1">
-						<igc-checkbox labelPosition="after" .checked="${this.testVar}" class="checkbox">
+						<igc-checkbox labelPosition="after" ?checked="${this.testVar}" class="checkbox">
 							Label
 						</igc-checkbox>
 					</div>

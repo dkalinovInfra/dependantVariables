@@ -7,7 +7,7 @@
 <div class="row-layout master-view-container">
     <div class="column-layout group">
         <div class="column-layout group_1">
-            <IgbCombo Data="@_northWindv2APICustomerDto" Label="Label/Placeholder" DisplayKey="CustomerId" Outlined="false" SingleSelect="true" Change="SingleSelectComboChange" class="single-select-combo" master_view-scope></IgbCombo>
+            <IgbCombo Data="@_northWindv2APICustomerDto" Label="@NorthWindv2APIService.SelectedCustomer.Value?.ContactName" DisplayKey="CustomerId" Outlined="false" SingleSelect="true" Change="SingleSelectComboChange" class="single-select-combo" master_view-scope></IgbCombo>
             <IgbButton Size="SizableComponentSize.Large" @onclick="@(e => Navigate(""))" class="button" master_view-scope>
                 Button
                 <IgbRipple></IgbRipple>

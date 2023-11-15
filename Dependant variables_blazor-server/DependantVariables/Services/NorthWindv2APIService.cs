@@ -13,8 +13,24 @@ namespace DependantVariables.NorthWindv2API
             _http = http;
         }
 
-        public BehaviorSubject<CustomerDto> SelectedCustomer { get; set; } = new(default);
         public BehaviorSubject<OrderDto> SelectedOrder { get; set; } = new(default);
+
+        private BehaviorSubject<CustomerDto> _selectedCustomer;
+        public BehaviorSubject<CustomerDto> SelectedCustomer
+        {
+            get
+            {
+                // Selected order depends on selected customer
+                if (_selectedCustomer == null)
+                {
+                    _selectedCustomer = new(default);
+                    SelectedOrder = new(default);
+                    _selectedCustomer.Subscribe(async _ => SelectedOrder.OnNext(default));
+                }
+                
+                return _selectedCustomer;
+            }
+        }
 
         public async Task<List<CustomerDto>> GetCustomerDtoList()
         {

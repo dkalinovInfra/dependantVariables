@@ -80,7 +80,7 @@ export default class App extends LitElement {
       <link rel='stylesheet' href='../../ig-theme.css'>
       <div class="column-layout group">
         <div class="column-layout group_1">
-          <igc-combo .data="${this.northWindv2APICustomerDto}" label="Label/Placeholder" display-key="customerId" ?outlined="${false}" ?single-select="${true}" @igcChange="${this.singleSelectComboIgcChange}" class="single-select-combo"></igc-combo>
+        <igc-combo .data="${this.northWindv2APICustomerDto}" .label="${northWindv2APIService.selectedCustomer.value?.contactName}" display-key="customerId" ?outlined="${false}" ?single-select="${true}" @igcChange="${this.singleSelectComboIgcChange}" class="single-select-combo"></igc-combo>
           <igc-button size="large" @click="${() => Router.go('/child-view')}" class="button">
             Button
             <igc-ripple></igc-ripple>

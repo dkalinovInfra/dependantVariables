@@ -62,9 +62,8 @@ export class ChildViewComponent implements OnInit, OnDestroy {
     this.northWindv2APIService.selectedCustomer.pipe(takeUntil(this.destroy$)).subscribe(
       () => this.northWindv2APIService.getOrderDtoList(this.northWindv2APIService.selectedCustomer.value?.customerId as any).pipe(take(1)).subscribe({        
         next: (data) => {
-          // orderDetails depends on selectedCustomer, quantity and discount depends on orderDetails
+          // orderDetails depends on selectedCustomer
           this.northWindv2APIOrderDto = data;
-          this.northWindv2APIService.selectedOrder.next(undefined);
           this.orderDetails = [];
         }, 
         error: (_err: any) => this.northWindv2APIOrderDto = []

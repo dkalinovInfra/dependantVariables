@@ -1,7 +1,7 @@
 <div class="column-layout group">
   <div class="column-layout group_1">
     <igx-simple-combo [data]="northWindv2APICustomerDto" displayKey="customerId" (selectionChanging)="singleSelectComboSelectionChanging($event)" class="single-select-combo">
-      <label igxLabel>Label/Placeholder</label>
+      <label igxLabel>{{ northWindv2APIService.selectedCustomer.value?.contactName }}</label>
     </igx-simple-combo>
     <button igxButton="raised" igxRipple routerLink="/child-view" class="button">
       Button

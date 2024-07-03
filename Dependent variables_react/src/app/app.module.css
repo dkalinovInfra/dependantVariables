@@ -19,7 +19,7 @@
   min-width: 50px;
   min-height: 50px;
   flex-grow: 1;
-  flex-basis: 0;
+  flex-shrink: 0;
 }
 .group_1 {
   justify-content: flex-start;
@@ -28,12 +28,14 @@
   position: relative;
   min-width: 50px;
   min-height: 50px;
+  flex-shrink: 0;
 }
 .single-select-combo {
   height: max-content;
   min-width: min-content;
-  flex-grow: 1;
-  flex-shrink: 0;
+}
+.button {
+  height: max-content;
 }
 .view-container {
   overflow: auto;

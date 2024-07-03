@@ -1,6 +1,6 @@
 # empty-react-project
 
-This project was generated with [Ignite UI CLI](https://github.com/IgniteUI/igniteui-cli) version 13.2.1.<br>
+This project was generated with [Ignite UI CLI](https://github.com/IgniteUI/igniteui-cli) version 13.2.2.<br>
 The template builds upon a project bootstrapped with [Vite](https://vitejs.dev/).
 
 ## Development server

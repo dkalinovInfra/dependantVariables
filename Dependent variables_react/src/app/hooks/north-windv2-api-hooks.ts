@@ -1,31 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { CustomerDto } from '../models/NorthwindRest/customer-dto';
-import { OrderDto } from '../models/NorthwindRest/order-dto';
-import { OrderDetailDto } from '../models/NorthwindRest/order-detail-dto';
-import { getCustomerDto, getCustomerDtoList, getOrderDetailDtoList, getOrderDtoList } from '../services/northwind-rest';
-
-export const useGetCustomerDto = (id: any) => {
-	const [customerDto, setCustomerDto] = useState<CustomerDto>();
-
-	const requestCustomerDto = useCallback(() => {
-		let ignore = false;
-		getCustomerDto(id)
-			.then((data) => {
-				if (!ignore) {
-					setCustomerDto(data);
-				}
-			})
-		return () => {
-			ignore = true;
-		}
-	}, [id]);
-
-	useEffect(() => {
-		requestCustomerDto();
-	}, [id, requestCustomerDto]);
-
-	return { requestNorthwindRestCustomerDto: requestCustomerDto, northwindRestCustomerDto: customerDto};
-}
+import { CustomerDto } from '../models/NorthWindv2API/customer-dto';
+import { OrderDto } from '../models/NorthWindv2API/order-dto';
+import { OrderDetailDto } from '../models/NorthWindv2API/order-detail-dto';
+import { getCustomerDtoList, getOrderDetailDtoList, getOrderDtoList } from '../services/north-windv2-api';
 
 export const useGetCustomerDtoList = () => {
 	const [customerDto, setCustomerDto] = useState<CustomerDto[]>([]);
@@ -47,7 +24,7 @@ export const useGetCustomerDtoList = () => {
 		requestCustomerDto();
 	}, [requestCustomerDto]);
 
-	return { requestNorthwindRestCustomerDto: requestCustomerDto, northwindRestCustomerDto: customerDto};
+	return { requestNorthWindv2APICustomerDto: requestCustomerDto, northWindv2APICustomerDto: customerDto, setNorthWindv2APICustomerDto: setCustomerDto};
 }
 
 export const useGetOrderDetailDtoList = (id: any) => {
@@ -70,7 +47,7 @@ export const useGetOrderDetailDtoList = (id: any) => {
 		requestOrderDetailDto();
 	}, [id, requestOrderDetailDto]);
 
-	return { requestNorthwindRestOrderDetailDto: requestOrderDetailDto, northwindRestOrderDetailDto: orderDetailDto};
+	return { requestNorthWindv2APIOrderDetailDto: requestOrderDetailDto, northWindv2APIOrderDetailDto: orderDetailDto, setNorthWindv2APIOrderDetailDto: setOrderDetailDto};
 }
 
 export const useGetOrderDtoList = (id: string) => {
@@ -93,5 +70,5 @@ export const useGetOrderDtoList = (id: string) => {
 		requestOrderDto();
 	}, [id, requestOrderDto]);
 
-	return { requestNorthwindRestOrderDto: requestOrderDto, northwindRestOrderDto: orderDto};
+	return { requestNorthWindv2APIOrderDto: requestOrderDto, northWindv2APIOrderDto: orderDto, setNorthWindv2APIOrderDto: setOrderDto};
 }

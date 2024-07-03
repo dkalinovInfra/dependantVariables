@@ -1,16 +1,8 @@
-import { CustomerDto } from '../models/NorthwindRest/customer-dto';
-import { OrderDetailDto } from '../models/NorthwindRest/order-detail-dto';
-import { OrderDto } from '../models/NorthwindRest/order-dto';
+import { CustomerDto } from '../models/NorthWindv2API/customer-dto';
+import { OrderDetailDto } from '../models/NorthWindv2API/order-detail-dto';
+import { OrderDto } from '../models/NorthWindv2API/order-dto';
 
 const API_ENDPOINT = 'https://data-northwind.indigo.design';
-
-export async function getCustomerDto(id: number): Promise<CustomerDto | undefined> {
-	const response = await fetch(`${API_ENDPOINT}/Customers/${id}`);
-	if (!response.ok) {
-		return Promise.resolve(undefined);
-	}
-	return response.json();
-}
 
 export async function getCustomerDtoList(): Promise<CustomerDto[]> {
 	const response = await fetch(`${API_ENDPOINT}/Customers`);

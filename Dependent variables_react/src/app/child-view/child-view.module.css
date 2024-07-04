@@ -1,0 +1,99 @@
+.row-layout {
+  display: flex;
+}
+.child-view-container {
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  height: 100%;
+}
+.column-layout {
+  display: flex;
+  flex-direction: column;
+}
+.group {
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  position: relative;
+  min-width: 50px;
+  min-height: 50px;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+.group_1 {
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  position: relative;
+  min-width: 50px;
+  min-height: 50px;
+}
+.card {
+  width: 320px;
+  height: max-content;
+  min-width: 320px;
+  max-width: 320px;
+  flex-shrink: 0;
+}
+.group_2 {
+  height: max-content;
+  min-width: 120px;
+  flex-shrink: 0;
+}
+.list {
+  height: max-content;
+  flex-shrink: 0;
+}
+.grid {
+  min-width: 600px;
+  min-height: 300px;
+  flex-grow: 1;
+  flex-basis: 0;
+}
+.actions-content {
+  min-width: 50px;
+  min-height: 40px;
+}
+.icon {
+  --size: 24px;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+.text {
+  height: max-content;
+  min-width: min-content;
+}
+.hyperlink {
+  color: hsla(var(--ig-info-500));
+  cursor: pointer;
+  height: max-content;
+  min-width: min-content;
+}
+.hyperlink_1 {
+  color: hsla(var(--ig-info-500));
+  cursor: pointer;
+  height: max-content;
+  min-width: min-content;
+  flex-shrink: 0;
+}
+.button {
+  height: max-content;
+}
+.slider {
+  width: 500px;
+  height: max-content;
+  min-width: 50px;
+  max-width: 500px;
+  flex-shrink: 0;
+}
+.input {
+  height: max-content;
+  min-width: min-content;
+  flex-shrink: 0;
+}
+.checkbox {
+  width: max-content;
+  height: max-content;
+}
